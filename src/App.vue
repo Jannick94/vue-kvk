@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <kvk-input limit="5" v-on:kvkClicked="onKvkSelect"></kvk-input>
+    <kvk-input limit="10" v-on:kvkClicked="onKvkSelect"></kvk-input>
   </div>
 </template>
 
@@ -34,6 +35,6 @@ export default {
 }
 
 #app {
-  width: 300px;
+  display: flex;
 }
 </style>

@@ -50,6 +50,7 @@ export default {
     },
     selectResult(result) {
       this.$emit('kvkClicked', result);
+      this.kvkInput = result.handelsnaam;
       this.kvkShown = false;
     }
   }
