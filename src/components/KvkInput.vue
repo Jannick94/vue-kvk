@@ -10,7 +10,10 @@
 
     <div class="kvk-input-results" v-if="kvkResults.length && kvkShown">
       <ul>
-        <li v-for="(result, index) in kvkResults" @click="selectResult(result)" :class="{ selected: (kvkSelected == index) }">
+        <li v-for="(result, index) in kvkResults"
+            @click="selectResult(result)"
+            :class="{ selected: (kvkSelected == index) }"
+        >
           {{ result.handelsnaam }}
         </li>
       </ul>
