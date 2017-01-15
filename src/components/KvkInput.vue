@@ -2,16 +2,15 @@
   <div class="kvk-input-container">
     <input type="text"
            v-model="kvkInput"
-           v-on:keyup="fetchResults()"
-           v-on:focus="kvkShown = true"
+           @keyup="fetchResults($event);
+                   handleListNavigation($event)
+                   handleListSelection($event)"
+           @focus="kvkShown = true"
     >
 
     <div class="kvk-input-results" v-if="kvkResults.length && kvkShown">
       <ul>
-        <li v-for="optional in optionalData" v-if="optionalData.length && kvkShown">
-          {{ optional.handelsnaam }}
-        </li>
-        <li v-for="result in kvkResults" @click="selectResult(result)">
+        <li v-for="(result, index) in kvkResults" @click="selectResult(result)" :class="{ selected: (kvkSelected == index) }">
           {{ result.handelsnaam }}
         </li>
       </ul>
@@ -35,23 +34,47 @@ export default {
   data () {
     return {
       api: 'https://zoeken.kvk.nl/Address.ashx?site=handelsregister&partialfields=&q=',
+      keycodes: [40,38,37,39,9,17,18,16,93,91,13],
       kvkShown: false,
       kvkInput: '',
       kvkResults: [],
+      kvkSelected: 0
+    }
+  },
+  watch: {
+    kvkSelected() {
+      if (this.kvkSelected > (this.limit - 1)) this.kvkSelected = 0;
+      if (this.kvkSelected < 0) this.kvkSelected = (this.limit - 1);
     }
   },
   methods: {
-    fetchResults() {
-      axios.get(`${this.api}${this.kvkInput}`)
-        .then((result) => {
-          this.kvkShown   = true;
-          this.kvkResults = result.data.resultatenHR.slice(0, this.limit);
-        });
+    fetchResults(event) {
+      if (!this.keycodes.includes(event.keyCode)) {
+        axios.get(`${this.api}${this.kvkInput}`)
+          .then((result) => {
+            this.kvkShown   = true;
+            this.kvkResults = result.data.resultatenHR.slice(0, this.limit);
+          });
+      }
+    },
+    handleListNavigation(event) {
+      if (event.keyCode == 40) this.kvkSelected++;
+      if (event.keyCode == 38) this.kvkSelected--;
+    },
+    handleListSelection(event) {
+      if (event.keyCode == 13) {
+        this.$emit('kvkClicked', this.kvkResults[this.kvkSelected]);
+
+        this.kvkInput     = this.kvkResults[this.kvkSelected].handelsnaam;
+        this.kvkShown     = false;
+        this.kvkSelected  = 0;
+      }
     },
     selectResult(result) {
       this.$emit('kvkClicked', result);
-      this.kvkInput = result.handelsnaam;
-      this.kvkShown = false;
+      this.kvkInput     = result.handelsnaam;
+      this.kvkShown     = false;
+      this.kvkSelected  = 0;
     }
   }
 }
@@ -60,6 +83,7 @@ export default {
 <style lang="scss" scoped>
   .kvk-input-container {
     position: relative;
+    width: 100%;
 
     input {
       padding: 5px;
@@ -70,7 +94,6 @@ export default {
     .kvk-input-results {
       width: 100%;
       position: absolute;
-      border: 1px solid #eee;
       box-shadow: 0px 5px 12px 0px rgba(0,0,0,0.2);
 
       ul {
@@ -81,15 +104,24 @@ export default {
         li {
           padding: 10px;
           background-color: #fff;
-          transition: background-color .15s ease-in-out;
+          transition: all .15s ease-in-out;
           cursor: pointer;
 
-          &:hover {
-            background-color: #ddd;
+          &:nth-child(even) {
+            background-color: #EEE;
           }
 
-          &:nth-child(even) {
-            background-color: #eee;
+          &:hover {
+            background-color: #DDD;
+          }
+
+          &.selected {
+            background-color: #1BBC9B;
+            color: #FFF;
+
+            &:hover {
+              background-color: #1BBC9B;
+            }
           }
         }
       }

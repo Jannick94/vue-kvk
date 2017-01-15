@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <kvk-input limit="5" v-on:kvkClicked="onKvkSelect"></kvk-input>
-    <kvk-input limit="10" v-on:kvkClicked="onKvkSelect"></kvk-input>
   </div>
 </template>
 
@@ -13,17 +12,9 @@ export default {
   components: {
     KvkInput
   },
-  data() {
-    return {
-      contactList: [
-        { handelsnaam: 'Pietje Puk' },
-        { handelsnaam: 'Jannick Berkhout' }
-      ]
-    }
-  },
   methods: {
     onKvkSelect(result) {
-      console.log(result.handelsnaam);
+      console.log(result);
     }
   }
 }
@@ -36,5 +27,6 @@ export default {
 
 #app {
   display: flex;
+  width: 50%;
 }
 </style>
