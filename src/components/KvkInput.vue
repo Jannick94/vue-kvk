@@ -55,8 +55,9 @@ export default {
       if (!this.keycodes.includes(event.keyCode)) {
         axios.get(`${this.api}${this.kvkInput}`)
           .then((result) => {
-            this.kvkShown   = true;
-            this.kvkResults = result.data.resultatenHR.slice(0, this.limit);
+            this.kvkShown    = true;
+            this.kvkResults  = result.data.resultatenHR.slice(0, this.limit);
+            this.kvkSelected = 0;
           });
       }
     },
