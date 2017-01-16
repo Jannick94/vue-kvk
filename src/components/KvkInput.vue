@@ -46,8 +46,8 @@ export default {
   },
   watch: {
     kvkSelected() {
-      if (this.kvkSelected > (this.limit - 1)) this.kvkSelected = 0;
-      if (this.kvkSelected < 0) this.kvkSelected = (this.limit - 1);
+      if (this.kvkSelected > (this.kvkResults.length - 1)) this.kvkSelected = 0;
+      if (this.kvkSelected < 0) this.kvkSelected = (this.kvkResults.length - 1);
     }
   },
   methods: {
